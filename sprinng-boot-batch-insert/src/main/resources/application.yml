@@ -1,0 +1,35 @@
+#
+#server:
+# servlet:
+#  context-path: /validator
+#
+#
+#
+## MySQL Properties
+#spring: 
+# application:
+#   name: springbatchproject
+# jpa:
+#  hibernate:
+#   ddl-auto: update
+#  show-sql: true
+#  properties:
+#   hibernate:
+#    format_sql: true
+#    use_sql_comments: true
+# datasource:
+#  url: jdbc:mysql://localhost:3306/localprojecttest
+#  username: root
+#  password: password
+#
+#  
+#
+#
+##logging.level.org.springframework=DEBUG
+#logging:
+# level:
+#  com:
+#   example: DEBUG
+#
+#
+#

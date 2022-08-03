@@ -1,0 +1,21 @@
+@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqGen")
+    @SequenceGenerator(name = "seqGen", sequenceName = "products_id_seq", allocationSize = 100)
+    
+ -> Keep note that always Batching is works on sequence and table generations 
+ 
+ if you mention allocationsize is id then that would be same as batch size this is very important
+ 
+ if you remove that allocationzise then what ever the value you specified in 
+ 
+spring.jpa.properties.hibernate.jdbc.batch_size=500
+
+it will take this as batch value -> this won't give much good performance, as if you specify allocationSize both side same
+then you will get very good result
+
+
+-> And JDBC batch is much higher performance provider compare to all.
+
+
+-> Key point always you need to consider flush and clear also so that it should not outofmemory exception.
+
+		and if you use ?rewriteBatchedStatements=true this in jdbc url more extra faster insertion happens.
