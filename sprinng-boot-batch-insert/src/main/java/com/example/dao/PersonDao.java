@@ -10,4 +10,6 @@ public interface PersonDao {
 	
 	public void saveAllByJDBCBatch(List<Person> persons);
 
+	void updateAllByJDBCBatch(List<Person> persons);
+
 }

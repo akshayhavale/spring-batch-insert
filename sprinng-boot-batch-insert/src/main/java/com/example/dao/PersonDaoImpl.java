@@ -77,6 +77,12 @@ public class PersonDaoImpl implements PersonDao {
 				statement.setString(3, person.getLastName());
 				statement.setString(4, person.getEmailAddress());
 				statement.addBatch();
+				/**
+				 * Lets say need to insert 1200 records with batch size = 500
+				 * 0 -> 500 (counter + 1) % BATCH_SIZE == 0
+				 * 501 -> 1000 (counter + 1) % BATCH_SIZE == 0
+				 * 1001 - 1200 (counter + 1) == persons.size()
+				 */
 				if ((counter + 1) % BATCH_SIZE == 0 || (counter + 1) == persons.size()) {
 					statement.executeBatch();
 					statement.clearBatch();
@@ -95,5 +101,42 @@ public class PersonDaoImpl implements PersonDao {
 //	public void persist(Person person) {
 //		entityManager.persist(person);
 //	}
+	
+	@Override
+	public void updateAllByJDBCBatch(List<Person> persons) {
+
+		System.out.println("insert using jdbc batch");
+		String sql = String.format("UPDATE %s SET EMAIL = ? WHERE ID = ?",
+				Person.class.getAnnotation(Table.class).name());
+		try (Connection connection = dataSource.getConnection();
+				PreparedStatement statement = connection.prepareStatement(sql)) {
+			connection.setAutoCommit(false);
+			int counter = 0;
+			for (Person person : persons) {
+				System.out.println(person.toString());
+				statement.clearParameters();
+				statement.setString(1, person.getEmailAddress());
+				statement.setLong(2, person.getId());
+				statement.addBatch();
+				/**
+				 * Lets say need to insert 1200 records with batch size = 500
+				 * 0 -> 500 (counter + 1) % BATCH_SIZE == 0
+				 * 501 -> 1000 (counter + 1) % BATCH_SIZE == 0
+				 * 1001 - 1200 (counter + 1) == persons.size()
+				 */
+				if ((counter + 1) % BATCH_SIZE == 0 || (counter + 1) == persons.size()) {
+					statement.executeBatch();
+					statement.clearBatch();
+				}
+				counter++;
+			}
+			connection.commit();
+			connection.setAutoCommit(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Exited");
+
+	}
 
 }
